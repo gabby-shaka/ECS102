@@ -1,27 +1,70 @@
-public class frogsimulation
-{
-/** Distance, in inches, from the starting position to the goal. */
-private int goalDistance;
-/** Maximum number of hops allowed to reach the goal. */
-private int maxHops;
+import java.util.ArrayList;
 
-public frogsimulationimulation(int dist, int numHops)
+public class FrogSimulation
 {
-goalDistance = dist;
-maxHops = numHops;
-}
+    private int goalDistance;
+    private int maxHops;
+    private ArrayList<Integer> currentHopData;
 
-private int hopDistance()
-{
-    int hop=0;
-    hop = (int)(Math.random()*10)+1; 
-    if (Math.random()<0.1){
-        hop=-hop;
+    public FrogSimulation(int dist, int numHops)
+    {
+        goalDistance = dist;
+        maxHops = numHops;
+        currentHopData = new ArrayList<Integer>();
     }
-    return hop; 
- }
 
-public boolean simulate()
-{ }
-public double runSimulations(int num)
-{ }
+    private int hopDistance()
+    {
+        return (int) (Math.random() * 11) - 2;
+    }
+
+    public boolean simulate()
+    {
+        currentHopData.clear();
+        int pos = 0;
+        int hops = 0;
+        
+        while (pos >= 0 && pos < goalDistance && hops < maxHops)
+        {
+            int hop = hopDistance();
+            currentHopData.add(hop);
+            pos += hop;
+            hops++;
+        }
+        
+        if (pos >= goalDistance)
+        {
+            return true;
+        }
+        
+        return false;
+    }
+
+    public double runSimulations(int num)
+    {
+        int successCount = 0;
+        
+        for (int i = 0; i < num; i++)
+        {
+            if (simulate())
+            {
+                successCount++;
+            }
+            printCurrentHopData();
+        }
+        
+        return (double) successCount / num;
+    }
+
+    public void printCurrentHopData()
+    {
+        System.out.println(currentHopData);
+    }
+
+    public static void main(String[] args)
+    {
+        FrogSimulation sim = new FrogSimulation(24, 5);
+        double successRate = sim.runSimulations(5);
+        System.out.println("Success Rate: " + successRate);
+    }
+}
